@@ -1,0 +1,17 @@
+:root{--brand:#b30000;--brand-700:#8a0000;--surface:#ffffff;--surface-alt:#f7f7f8;--text:#222;--muted:#6c757d;--ring:rgba(179,0,0,.25)}
+body{color:var(--text);background:var(--surface-alt)}
+.h1,.h2,.h3,h1,h2,h3{font-weight:700}
+.btn-primary{background:var(--brand);border-color:var(--brand)}
+.btn-primary:hover{background:var(--brand-700);border-color:var(--brand-700)}
+.btn-outline-primary{color:var(--brand);border-color:var(--brand)}
+.btn-outline-primary:hover{background:var(--brand);color:#fff}
+.card{border:1px solid #ececec}
+.form-control:focus,.form-select:focus{box-shadow:0 0 0 .2rem var(--ring);border-color:var(--brand)}
+.section{background:var(--surface);border-radius:12px;padding:16px}
+.section + .section{margin-top:16px}
+.page-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.page-title h2{margin:0}
+.helper{color:var(--muted)}
+.empty{border:1px dashed #ddd;border-radius:12px;padding:24px;color:var(--muted);text-align:center}
+.spinner{width:1.25rem;height:1.25rem;border:.2rem solid #e9ecef;border-top-color:var(--brand);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}

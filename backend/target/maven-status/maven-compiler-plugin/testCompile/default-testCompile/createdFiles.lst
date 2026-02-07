@@ -1,0 +1,4 @@
+com\cucampus\auth\AuthServiceTest.class
+com\cucampus\gatepass\GatePassControllerSecurityTest.class
+com\cucampus\testutil\IntegrationTestBase.class
+com\cucampus\complaint\ComplaintServiceTest.class

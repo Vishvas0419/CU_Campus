@@ -1,0 +1,13 @@
+.root{background:#f4f4f4;min-height:100vh;padding:20px}
+.container{max-width:600px;margin:auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.title{text-align:center}
+.group{margin-bottom:15px}
+.label{display:block;margin-bottom:5px}
+.input, .textarea{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px}
+.button{background:#aa0000;color:#fff;padding:10px 15px;border:none;border-radius:4px;cursor:pointer;width:100%}
+.button:hover{background:#e53232}
+.message{color:#690;text-align:center;margin-top:10px}
+.pic{width:100px;height:100px;border-radius:50%;margin:10px auto;overflow:hidden}
+.pic img{width:100%;height:auto}
+.info{text-align:center;margin-bottom:10px}
+.actions{margin-top:10px}

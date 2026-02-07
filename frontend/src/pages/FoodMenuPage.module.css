@@ -1,0 +1,48 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+.header {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+.menuText {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 36px;
+  margin-top: 10px;
+}
+.coffeeImage {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 2px solid rgba(217, 217, 217, 0.769);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+.itemControls { display: flex; align-items: center; }
+.itemCount { margin: 0 8px; }
+.viewBillBtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.viewBillBtn:hover { background-color: #45a049; }
+.outletSelect { margin: 10px 0 20px 0; }
