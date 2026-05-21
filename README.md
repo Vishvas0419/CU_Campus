@@ -2,6 +2,16 @@
 
 A full-stack web application for managing university campus workflows including complaint management, gate pass requests, mess information, and campus food ordering.
 
+## 🌐 Live Demo
+
+**Try it out now!** The application is deployed and live:
+
+- 🎨 **Frontend (Vercel)**: https://cu-campus-frontend.vercel.app
+- ⚙️ **Backend API (Railway)**: https://cu-campus-backend-production.up.railway.app
+- 💾 **Database (Railway MySQL)**: Integrated into Railway project, production data stored
+
+---
+
 ## 📋 Overview
 
 CU Campus is a centralized digital platform that simplifies student life at Chitkara University by consolidating multiple campus services into a single, intuitive portal. Students can lodge complaints, request gate passes, check mess menus, and order food from campus vendors—all without visiting multiple offices.
@@ -176,7 +186,30 @@ REACT_APP_API_BASE_URL=http://localhost:8080/api
 **File**: `frontend/.env.production`
 
 ```env
-REACT_APP_API_BASE_URL=https://api.yourdomaincom/api
+REACT_APP_API_BASE_URL=https://cu-campus-backend-production.up.railway.app/api
+```
+
+**Frontend API Client Example** (`frontend/src/api/apiClient.js`):
+
+```javascript
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+// Add token to requests
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('jwtToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default apiClient;
 ```
 
 ---
@@ -275,7 +308,8 @@ CU Campus Main/
 
 ### Base URL
 - **Development**: `http://localhost:8080/api`
-- **Production**: `https://your-domain.com/api`
+- **Production**: `https://cu-campus-backend-production.up.railway.app/api`
+- **Frontend**: `https://cu-campus-frontend.vercel.app`
 
 ### Authentication Endpoints
 
@@ -439,6 +473,18 @@ Content-Type: application/json
 
 ---
 
+## ⚡ Quick Links
+
+| Resource | Link |
+|----------|------|
+| **Live Frontend** | https://cu-campus-frontend.vercel.app |
+| **Live API** | https://cu-campus-backend-production.up.railway.app/api |
+| **GitHub** | https://github.com/Vishvas0419/CU_Campus |
+| **API Base (Dev)** | http://localhost:8080/api |
+| **Frontend (Dev)** | http://localhost:3000 |
+
+---
+
 ## 🧪 Testing
 
 ### Run Backend Tests
@@ -512,35 +558,206 @@ npm test -- --coverage
 
 ## 🚢 Deployment
 
-### Docker (Recommended)
+### 🚀 Production (Current Setup)
 
-1. **Build Docker Image**
+#### Frontend - Vercel Deployment
+
+1. **Push to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New" → "Project"
+   - Import GitHub repository
+   - Configure environment variables:
+     ```env
+     REACT_APP_API_BASE_URL=https://cu-campus-backend-production.up.railway.app/api
+     ```
+   - Deploy
+
+3. **Access**: https://cu-campus-frontend.vercel.app
+
+#### Backend - Railway Deployment
+
+1. **Create Railway Account** (https://railway.app)
+
+2. **Deploy Backend**
+   ```bash
+   # Install Railway CLI
+   npm i -g @railway/cli
+   
+   # Login
+   railway login
+   
+   # Initialize project
+   cd backend
+   railway init
+   
+   # Add MySQL database
+   railway add
+   # Select: MySQL
+   
+   # Deploy
+   railway deploy
+   ```
+
+3. **Configure Environment Variables** in Railway Dashboard:
+   ```env
+   DB_URL=<Railway MySQL Connection String>
+   DB_USERNAME=<MySQL User>
+   DB_PASSWORD=<MySQL Password>
+   JWT_SECRET=<Your 32+ char secret>
+   CORS_ORIGINS=https://cu-campus-frontend.vercel.app
+   ```
+
+4. **Access**: https://cu-campus-backend-production.up.railway.app
+
+#### Database - Railway MySQL
+
+- **Automatically provisioned** with Railway backend
+- **Connection Details**: Available in Railway dashboard
+- **Data Persistence**: All application data stored persistently
+- **Backups**: Railway handles automatic backups
+
+### 🐳 Docker (Local/Self-Hosted)
+
+1. **Build Docker Images**
    ```bash
    docker build -t cu-campus-backend:latest ./backend
    docker build -t cu-campus-frontend:latest ./frontend
    ```
 
-2. **Run with Docker Compose**
+2. **Create docker-compose.yml** in project root:
+   ```yaml
+   version: '3.8'
+   
+   services:
+     mysql:
+       image: mysql:8.0
+       environment:
+         MYSQL_DATABASE: cu_campus
+         MYSQL_USER: cu_user
+         MYSQL_PASSWORD: cu_password
+         MYSQL_ROOT_PASSWORD: root_password
+       ports:
+         - "3306:3306"
+       volumes:
+         - mysql_data:/var/lib/mysql
+   
+     backend:
+       build: ./backend
+       environment:
+         DB_URL: jdbc:mysql://mysql:3306/cu_campus
+         DB_USERNAME: cu_user
+         DB_PASSWORD: cu_password
+         JWT_SECRET: your-secret-key-min-32-chars
+         CORS_ORIGINS: http://localhost:3000
+       ports:
+         - "8080:8080"
+       depends_on:
+         - mysql
+   
+     frontend:
+       build: ./frontend
+       environment:
+         REACT_APP_API_BASE_URL: http://localhost:8080/api
+       ports:
+         - "3000:3000"
+       depends_on:
+         - backend
+   
+   volumes:
+     mysql_data:
+   ```
+
+3. **Run with Docker Compose**
    ```bash
    docker-compose up -d
    ```
 
-### Manual Deployment (Linux/Ubuntu)
+4. **Access**:
+   - Frontend: `http://localhost:3000`
+   - Backend: `http://localhost:8080`
+
+### Manual Deployment (Linux/Ubuntu Server)
 
 #### Backend
 ```bash
-cd backend
+# SSH into your server
+ssh user@your-server-ip
+
+# Clone repository
+git clone https://github.com/Vishvas0419/CU_Campus.git
+cd "CU Campus Main/backend"
+
+# Build JAR
 mvn clean package -DskipTests
+
+# Run with environment variables
+export DB_URL=jdbc:mysql://localhost:3306/cu_campus
+export DB_USERNAME=cu_user
+export DB_PASSWORD=cu_password
+export JWT_SECRET=your-secret-key-min-32-chars
+export CORS_ORIGINS=https://your-domain.com
+
 java -jar target/cu-campus-backend-0.0.1-SNAPSHOT.jar
 ```
 
 #### Frontend
 ```bash
-cd frontend
+cd "CU Campus Main/frontend"
+
+# Build
 npm run build
+
+# Install serve
 npm install -g serve
+
+# Run on port 3000
 serve -s build -l 3000
 ```
+
+#### Using systemd (Recommended for servers)
+
+Create service file: `/etc/systemd/system/cu-campus-backend.service`
+
+```ini
+[Unit]
+Description=CU Campus Backend
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/cu-campus
+Environment="DB_URL=jdbc:mysql://localhost:3306/cu_campus"
+Environment="DB_USERNAME=cu_user"
+Environment="DB_PASSWORD=cu_password"
+Environment="JWT_SECRET=your-secret-key"
+Environment="CORS_ORIGINS=https://your-domain.com"
+ExecStart=/usr/bin/java -jar /var/www/cu-campus/backend/target/cu-campus-backend-0.0.1-SNAPSHOT.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable cu-campus-backend
+sudo systemctl start cu-campus-backend
+```
+
+### Deployment Comparison
+
+| Method | Cost | Ease | Scalability | Recommendation |
+|--------|------|------|-------------|----------------|
+| **Vercel + Railway** | Free tier available | ⭐⭐⭐⭐⭐ | Auto-scaling | ✅ **Best for production** |
+| **Docker** | Depends on hosting | ⭐⭐⭐ | Manual scaling | Good for teams |
+| **Manual VPS** | $5-20/month | ⭐⭐ | Limited | Learning/hobby projects |
 
 ---
 
@@ -597,13 +814,40 @@ For issues, questions, or suggestions:
 
 ## 🗺️ Roadmap
 
+- [x] **Production Deployment** (Vercel + Railway)
+- [x] **JWT Authentication**
+- [x] **Role-Based Access Control**
 - [ ] Mobile app (React Native)
 - [ ] Email notifications for approvals
 - [ ] SMS alerts for complaints
-- [ ] Analytics dashboard
+- [ ] Analytics dashboard with charts
 - [ ] Performance optimization (Redis caching)
-- [ ] Multi-language support
+- [ ] Multi-language support (i18n)
 - [ ] Advanced search filters
+- [ ] Real-time notifications (WebSocket)
+- [ ] Automated testing pipeline (CI/CD)
+
+---
+
+## 🎯 Test Credentials
+
+### Development (Local)
+
+**Admin Account**:
+- Username: `admin`
+- Password: `admin123`
+
+**Warden Account**:
+- Username: `warden1`
+- Password: `warden123`
+- Hostel: `Block A`
+
+**Student Account**:
+- Username: `student1`
+- Password: `student123`
+- Hostel: `Block A`
+
+These are seeded automatically when the backend starts (see `DataSeeder.java`).
 
 ---
 
